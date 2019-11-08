@@ -1,20 +1,55 @@
+
+/* Cellular Auotmata Program by
+Gina Fenton (180012673) Skye Kirwan(190012694), Harry Jamieson() */
+
 #include <iostream>
+#include <cstdio>
 #include <fstream>
 #include <bitset>
 #include <algorithm> //for reverse()
 #include <experimental/random>
-#include <vector>
-#define SIZE 50
+#define SIZE 8
 using namespace std;
-#define WIDTH 50
 bool writeToFile = true;
+bool lineByline = true;
 //array for binary
 int binary[8];
 
-vector <vector<int> > vec( SIZE , vector<int> (WIDTH,0));
+void convertToDecimal(bitset<SIZE> binary)
+{
+
+  int decimal = 0;
 
 
+  for (int i=0; i<SIZE; i++)
+  {
+    // for each binary number 
+    if (binary[i] == 1)
+    {
+      int equivallent;
+      //find the decimal equivallent from position i
+      if (i == 0)
+      { 
+        equivallent = 1;
+      }
+      else
+      {
+        equivallent = 2 << (i-1);
+      }
+      if (binary[i] == 1)
+      {
+        decimal = decimal + equivallent;
+      }
 
+    }
+
+  }
+
+  cout << "Your binary number converted to decimal is: " << decimal << endl;
+
+}
+
+//binary converter to store decimal numbers as binary in the global variable for future functions to use
 void convertToBinary(int decimal)
 {
 
@@ -47,30 +82,70 @@ cout << endl;
 }
 
 
+//lets the user choose the rule they want and passes it to the binary converter
 void ruleCreation() {
   int rule;
-  int error;
+  int error, error2;
 
-
-  convertToBinary(rule);
-
-
-  do
-{
-    error = 0;
-  cout << "What rule do you want to use? (0-255?) ";
-  cin >> rule;
-    if (cin.fail())
+    int selection;
+  cout<<"\n1. Choose rule to use";
+  cout<<"\n2. Pick random rule";
+  cout<<"\n3. Exit program";
+  cout<<"\nEnter selection: ";
+  
+  do {
+  error2 = 0;
+  // read the input
+  cin>>selection;
+   if (cin.fail())
     {
-        cout << "Please enter a valid integer" << endl;
-        error = 1;
+        cout << "Please enter a valid integer (1-3)" << endl;
+        error2 = 1;
         cin.clear();
         cin.ignore(80, '\n');
+        cin>>selection;
     }
-}while(error == 1 || rule<0 || rule>255);
+
+    if (selection == 1) {
+
+         do
+           {
+           error = 0;
+           cout << "What rule do you want to use? (0-255?) ";
+           cin >> rule;
+            if (cin.fail()) {
+             cout << "Please enter a valid integer" << endl;
+             error = 1;
+             cin.clear();
+              cin.ignore(80, '\n');
+            }
+       } while(error == 1 || rule<0 || rule>255);
+
+       convertToBinary(rule);
+    }
+
+    else if (selection == 2) {
+        //loop through empty bitset and populate randomly
+      for (int i = 0; i <SIZE; i++)
+      {
+        //assign random int either 1 or 0
+      binary[i] = std::experimental::randint(0,1);
+      cout<<binary[i];
+      }
+      cout<<"\n";
+    }
+
+    else if (selection == 3) {
+      exit(1);
+
+    } else {
+      error2=1;
+      cout<<"\nThat is not a valid selection, try again (1-4)";
+    }
+
+  }while(error2 == 1);
+
 }
-
-
 
 //user making first generation themself - bit by bit
 bitset<SIZE> userMakeFirstGen()
@@ -158,9 +233,16 @@ bitset<SIZE> generateFirstGenRandomly()
 //containts all combinations for the automata rules and generates new lines
 bitset<SIZE> nextGen(bitset<SIZE>x_old)
 {
+  //'x_old' = parent 'x' = child 
 	writeGenToFile(x_old);
   bitset<SIZE> x;
 
+  // Rules:
+  //  111  110  101  100  011  010  001  000
+
+//checks the binary number (holding the rule picked by user) for 0 or 1
+//each item in array corresponds to different rule
+//if the item in array is 0, the rule creates a 0, if 1 then the rule creates a 1
 
 for (int i = 0; i<SIZE-1; i++) {
           // 111 parent generates 0 child if binary[0] (rule 1) is 0
@@ -231,13 +313,17 @@ for (int i = 0; i<SIZE-1; i++) {
   //print out new gen
   for (int j=0; j< x.size(); j++)
   { 
+
     cout << x[j];
   }
-  cout << endl;
+  if (lineByline == false) {
+  cout << endl; 
+}
 
   return x;
   }
 
+//runs the generating process with user inputs 
 void runGen() {
      string filename;
     
@@ -246,9 +332,97 @@ void runGen() {
     bitset<SIZE> def(string("000010000"));
 
     int gens = 0;
-    int error, error2;
+    int error, error2, selection;
+
+  cout<<"\nDo you want to generate the automata line by line? ";
+  cout<<"\n1. Yes, line by line generation";
+  cout<<"\n2. No, full generation displayed\n";
+
+  cout<<"\nEnter Selection: \n";
+
+  do {
+  error2 = 0;
+  cin>>selection;
+
+   if (cin.fail() || selection<1 || selection>2)
+    {
+        cout << "Please enter a valid integer (1-2)" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+    }
+  } while (error2 == 1 || selection<1 || selection>2);
 
 
+//line by line selected
+if (selection==1) {
+lineByline = true;
+      if (writeToFile == true) { //set to true but should ask user at start
+  cout << "\nChoose a new name to create a new file, or an existing name to add to that file\n";
+  cout << "Name of file to save to: ";
+  cin >> filename; }
+
+
+  //2 choices for first generation (user pick how they want it made at start)
+  int selection2;
+  cout<<"\n1. Generate random first generation";
+  cout<<"\n2. Create your own first generation";
+  cout<<"\n3. Generate default first generation";
+  cout<<"\n4. Exit program\n";
+  cout<<"\nEnter selection: ";
+
+do {
+
+  error2 = 0;
+  // read the input
+  cin>>selection2;
+   if (cin.fail())
+    {
+        cout << "Please enter a valid integer (1-4)" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+        cin>>selection2;
+    }
+
+    if (selection2 == 1) {
+        x_old = generateFirstGenRandomly();
+    }
+
+    else if (selection2 == 2) {
+      x_old = userMakeFirstGen();
+    }
+
+    else if (selection2 == 3) {
+      x_old = def;
+
+    } else if (selection2 == 4) {
+      exit(1);
+
+    } else {
+      error2=1;
+      cout<<"\nThat is not a valid selection, try again (1-4)";
+    }
+
+  }while(error2 == 1);
+
+#define KEY_DOWN 80
+int c = ',';
+cout<<"Press the space bar to generate the next line or the full stop key to exit";
+
+do {
+c = getchar();
+if (c == ' ') {
+    //make gen
+      x = nextGen(x_old);
+      x_old = x;
+  } 
+} while (c != '.');
+
+// full display
+} else if (selection==2) {
+
+lineByline = false;
 // input validation loop
 do
 {
@@ -262,7 +436,7 @@ do
         cin.clear();
         cin.ignore(80, '\n');
     }
-}while(error == 1 || gens<1);
+} while(error == 1 || gens<1);
   
 
     if (writeToFile == true) { //set to true but should ask user at start
@@ -272,38 +446,39 @@ do
 
 
   //2 choices for first generation (user pick how they want it made at start)
-  int selection;
-  cout<<"\n1. Generate random first gen";
+  int selection2;
+  cout<<"\n1. Generate random first generation";
   cout<<"\n2. Create your own first generation";
   cout<<"\n3. Generate default first generation";
   cout<<"\n4. Exit program\n";
   cout<<"\nEnter selection: ";
+
 do {
 
   error2 = 0;
   // read the input
-  cin>>selection;
+  cin>>selection2;
    if (cin.fail())
     {
         cout << "Please enter a valid integer (1-4)" << endl;
         error = 1;
         cin.clear();
         cin.ignore(80, '\n');
-        cin>>selection;
+        cin>>selection2;
     }
 
-    if (selection == 1) {
+    if (selection2 == 1) {
         x_old = generateFirstGenRandomly();
     }
 
-    else if (selection == 2) {
+    else if (selection2 == 2) {
       x_old = userMakeFirstGen();
     }
 
-    else if (selection == 3) {
+    else if (selection2 == 3) {
       x_old = def;
 
-    } else if (selection == 4) {
+    } else if (selection2 == 4) {
       exit(1);
 
     } else {
@@ -327,8 +502,71 @@ do {
       x = nextGen(x_old);
       x_old = x;
     }
+  }
    
 }
+
+
+void convertNums() {
+  int error, selection, error2, num;
+
+cout<<"\n 1. Convert Binary to Decimal";
+cout<<"\n 2. Convert Decimal to Binary\n";
+
+  cin>>selection;
+do {
+  error=0;
+  if (cin.fail())
+    {
+        cout << "Please enter a valid integer (1 or 2)" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+        cin>>selection;
+    }
+}while(error == 1);
+
+switch(selection) {
+
+case 1 :
+{
+// //have user enter the binary
+bitset<SIZE> binaryInput = userMakeFirstGen();
+convertToDecimal(binaryInput);
+}
+break;
+
+case 2 :
+
+//validating the number entered
+do
+{
+    error2 = 0;
+    cout<<"\nEnter decimal number between 0 and 255\n";
+    cin >> num;
+    if (cin.fail())
+    {
+        cout << "\nPlease enter a valid integer\n" << endl;
+        error2 = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+    }
+
+}while(error2 == 1 || num<0 || num>255);
+
+convertToBinary(num);
+break;
+
+// other than A, M, D and X...
+default : cout<<"\n Invalid selection"; }
+// no break in the default case
+}
+
+
+
+int size = 50;
+int width = 50;
+vector <vector<int> > vec( size, vector<int> (width,0));
 
 bool birth (int xPos,int yPos)
 {
@@ -458,9 +696,9 @@ cout << " \n";
 cout << "Please enter the percentage of the grid you want to be randomly filled ";
 cin >> randomInt;
 
-for(int i = 1; i < SIZE-2; i++)
+for(int i = 1; i < size-2; i++)
 {
-	for(int j = 1; j < WIDTH-2; j++)
+	for(int j = 1; j < width-2; j++)
 	{
 		int temp = std::experimental::randint(0,100);
 		if (temp <= randomInt ){vec[i][j] = 1;}
@@ -530,8 +768,7 @@ for (int i = 0; i<size-2;i++)
 
 }
 
-
-
+//the menu for the main program
 void menu() {
 int selection;
 int error;
@@ -540,8 +777,9 @@ cout<<"\n Menu";
 cout<<"\n========";
 cout<<"\n 1. Run";
 cout<<"\n 2. Game of life";
-cout<<"\n 3. Turn save off/on";
-cout<<"\n 4. Exit\n";
+cout<<"\n 3. Turn automatic save off/on";
+cout<<"\n 4. Convert binary or decimal numbers";
+cout<<"\n 5. Exit\n";
 cout<<"\nEnter selection: ";
 
 // read the input
@@ -550,7 +788,7 @@ do {
   error=0;
   if (cin.fail())
     {
-        cout << "Please enter a valid integer (1-4)" << endl;
+        cout << "Please enter a valid integer (1-5)" << endl;
         error = 1;
         cin.clear();
         cin.ignore(80, '\n');
@@ -566,7 +804,7 @@ case 1 :
 ruleCreation();
 runGen();
 break;
-case 2 : gameOfLife();
+case 2 :{cout<<"\n game of life";}gameOfLife();
 break;
 case 3 :
 if (writeToFile == true) {
@@ -577,7 +815,10 @@ if (writeToFile == true) {
   {cout<<"\n Auto save is now ON";}
 }
 break;
-case 4 :{cout<<"\n Goodbye! ";}
+case 4:
+convertNums();
+break;
+case 5 :{cout<<"\n Goodbye! ";}
 exit(0);
 break;
 
