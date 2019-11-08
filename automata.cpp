@@ -4,13 +4,12 @@
 #include <algorithm> //for reverse()
 #include <experimental/random>
 #include <vector>
-#define SIZE 8
+#define SIZE 50
 using namespace std;
-#define WIDTH 15
+#define WIDTH 50
 bool writeToFile = true;
 //array for binary
 int binary[8];
-int neighbours = 0 ;
 
 vector <vector<int> > vec( SIZE , vector<int> (WIDTH,0));
 
@@ -333,96 +332,10 @@ do {
 
 bool birth (int xPos,int yPos)
 {
-	neighbours =0; 
-	// this is to stop segmentation errors due to the statement searching outside the bounds of the vector
-	if (yPos == 0 )
-	{
-		for (int i = xPos; i<= xPos++ ;i++)
-	    {
-		for (int j = yPos-1; j<= yPos+1; j++)
-		{
-			
-			if (vec[i][j] == 1)
-			{
-				
-				neighbours++;
-				
-			}
-		}
-		
-	}
-	}
-	else if (xPos == 0 )
-	{
-		for (int i = xPos-1; i<= xPos++ ;i++)
-	{
-		for (int j = yPos; j<= yPos+1; j++)
-		{
-			
-			if (vec[i][j] == 1)
-			{
-				
-				neighbours++;
-				
-			}
-		}
-		
-	}
-	}
-	else if (yPos == WIDTH-1 )
-	{
-		for (int i = xPos-1; i<= xPos++;i++)
-	{
-		for (int j = yPos-1; j<= yPos; j++)
-		{
-			
-			if (vec[i][j] == 1)
-			{
-				
-				neighbours++;
-				
-			}
-		}
-		
-	}
-	}
-	else if (xPos == SIZE-1 )
-	{
-		for (int i = xPos-1; i<= xPos++ ;i++)
-	{
-		for (int j = yPos; j<= yPos; j++)
-		{
-			
-			if (vec[i][j] == 1)
-			{
-				
-				neighbours++;
-				
-			}
-		}
-		
-	}
-	}
-	else if (xPos == SIZE-1 )
-	{
-		for (int i = xPos-1; i<= xPos++ ;i++)
-	{
-		for (int j = yPos; j<= yPos; j++)
-		{
-			
-			if (vec[i][j] == 1)
-			{
-				
-				neighbours++;
-				
-			}
-		}
-		
-	}
-	}
+	int neighbours =0; 
 	
 
-	for (int i = xPos-1; i<= xPos++ ;i++)
+	for (int i = xPos-1; i<= xPos+1 ;i++)
 	{
 		for (int j = yPos-1; j<= yPos+1; j++)
 		{
@@ -437,7 +350,7 @@ bool birth (int xPos,int yPos)
 		
 	}
 
-	cout << neighbours;
+	//cout << neighbours;
 	
 
 	if (neighbours == 3 )
@@ -453,7 +366,7 @@ bool birth (int xPos,int yPos)
 
 bool deathIsolation(int xPos, int yPos)
 {
-	neighbours =0; 
+	int neighbours =0; 
 
 	for (int i = xPos-1; i<= xPos+1;i++)
 	{
@@ -478,7 +391,7 @@ bool deathIsolation(int xPos, int yPos)
 bool deathOvercrowding(int xPos, int yPos)
 {
 
-	neighbours =0; 
+	int neighbours =0; 
 
 	for (int i = xPos-1; i<= xPos+1;i++)
 	{
@@ -492,7 +405,7 @@ bool deathOvercrowding(int xPos, int yPos)
 		
 	}
 
-	if (neighbours <=4 )
+	if (neighbours >=4 )
 	{
 		return true; 
 	}
@@ -502,12 +415,13 @@ bool deathOvercrowding(int xPos, int yPos)
 
 bool survival (int xPos, int yPos)
 {
-	neighbours =0; 
+	int neighbours =0; 
 
 	for (int i = xPos-1; i<= xPos+1;i++)
 	{
 		for (int j =yPos-1; j<= yPos+1; j++)
 		{
+
 			if (vec[i][j] == 1)
 			{
 				neighbours++;
@@ -516,106 +430,103 @@ bool survival (int xPos, int yPos)
 		
 	}
 
-	if (((neighbours ==3 )||(neighbours==2))&&(vec[xPos][yPos] == 1))
+	if ((neighbours ==3 )||(neighbours==2))
 	{
-		return true; 
+		if (vec[yPos][xPos] == 1 )
+			{
+				return true;
+			} 
 	}
 
-	else{return false;}
+	else
+	{
+		return false;
+	}
 }
 
 int gameOfLife()
 {
+int size = 50;
+int width = 50;
+int gen = 0 ;
+int randomInt= 0 ;
+cout << "The starting point for the game is randomly generated ";
+cout << "\n";
+cout << "Please enter the amount of generations you would like to run:";
+cin >> gen; 
+cout << " \n";
+cout << "Please enter the percentage of the grid you want to be randomly filled ";
+cin >> randomInt;
 
-// this prints out what is going on 
-
-vec[2][3] = 1;
-vec[2][4] = 1;
-vec[2][2] = 1;
-vec[3][3] = 1;
-vec[3][4] = 1;
-vec[3][2] = 1;
-vec[4][3] = 1;
-vec[4][4] = 1;
-vec[4][2] = 1;
-
-	for (int i = 0; i<WIDTH;i++)
+for(int i = 1; i < SIZE-2; i++)
+{
+	for(int j = 1; j < WIDTH-2; j++)
 	{
-		for (int j =0; j<SIZE; j++)
-		{
-			cout<< vec[i][j]<< " " ;
-		}
-		cout<< "\n";
+		int temp = std::experimental::randint(0,100);
+		if (temp <= randomInt ){vec[i][j] = 1;}
+		else {vec[i][j] = 0;} 
+
 	}
-cout<< "\n";
-	for (int i = 1; i<SIZE;i++)
-	{
-		for (int j =1; j<WIDTH; j++)
-		{
-			if (birth(i,j) == true)
-			{
+}
 
-				vec[i][j] = 1; 
-			}
-			if(deathIsolation(i,j)== true)
+for (int i = 0; i < gen ; i++)
+{
+for (int i = 0; i<size-2;i++)
+	{
+		for (int j =0; j<width-2; j++)
+		{
+			cout << " ";
+			if (vec[i][j] == 0)
 			{
-				vec[i][j] = 0;
+				cout << "□" ;
 			}
-			if(deathOvercrowding(i,j) == true)
+			else 
 			{
-				vec[i][j] = 0;
-			}
-			if(survival(i,j) == true)
-			{
-				vec[i][j] = 1;
+				cout <<"■" ;
 			}
 			
 		}
-		
-	}
-	for (int i = 0; i<WIDTH;i++)
-	{
-		for (int j =0; j<SIZE; j++)
-		{
-			cout<< vec[i][j]<< " " ;
-		}
 		cout<< "\n";
 	}
-cout<< "\n";
-	for (int i = 1; i<WIDTH-1;i++)
+
+	cout<< "\n";
+	for (int i = 1; i< size-2;i++)
 	{
-		for (int j =1; j<SIZE-1; j++)
+		for (int j =1 ; j< width-2; j++)
 		{
+			// having a problem wih birth for some reason
 			if (birth(i,j) == true)
 			{
 				vec[i][j] =1; 
 			}
-			if(deathIsolation(i,j)== true)
-			{
-				vec[i][j] = 0;
-			}
-			if(deathOvercrowding(i,j) == true)
-			{
-				vec[i][j] = 0;
-			}
-			if(survival(i,j) == true)
+			else if(survival(i,j) == true)
 			{
 				vec[i][j] = 1;
 			}
+			else if(deathIsolation(i,j)== true)
+			{
+				vec[i][j] = 0;
+			}
+		    else if(deathOvercrowding(i,j) == true)
+			{
+				vec[i][j] = 0;
+			}
+			
+			else 
+			{
+				vec[i][j] = 0;
+			}
+
 			
 		}
 		
 	}
-	for (int i = 0; i<WIDTH;i++)
-	{
-		for (int j =0; j<SIZE; j++)
-		{
-			cout<< vec[i][j]<< " " ;
-		}
-		cout<< "\n";
-	}
+}
+	cout<< "\n";
 
-return 1;
+
+	return 1;
+
 
 }
 
