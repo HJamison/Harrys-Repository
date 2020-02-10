@@ -1,0 +1,11 @@
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\bin\Debug\HumansVsZombies.exe.config
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\bin\Debug\HumansVsZombies.exe
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\bin\Debug\HumansVsZombies.pdb
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.csprojAssemblyReference.cache
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.LoadingScreen.resources
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.Properties.Resources.resources
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.csproj.GenerateResource.cache
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.exe
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.pdb
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.Game.resources
+C:\Users\Harrys-Laptop\source\repos\HumansVsZombies\HumansVsZombies\obj\Debug\HumansVsZombies.MainMenu.resources
